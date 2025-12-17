@@ -12,6 +12,28 @@ Instead of a single "black box" model, we've built a **Multi-Agent System** wher
 
 The system is designed as a swarm of 4 independent agents. When you click "IGNITE AGENT SWARM", here is what happens under the hood:
 
+```mermaid
+graph TD
+    User([User Input: Drug & Disease]) --> UI[Streamlit Interface]
+    UI -->|Trigger Swarm| Lit[📚 Literature Agent]
+    UI -->|Trigger Swarm| Pat[⚖️ Patent Agent]
+    UI -->|Trigger Swarm| Clin[🏥 Clinical Agent]
+    
+    Lit -->|Relevance Score| Dec[🧠 Decision Agent]
+    Pat -->|Risk Level| Dec
+    Clin -->|Safety Score| Dec
+    
+    Dec -->|Synthesize Data| LLM{Gemini LLM}
+    LLM -->|Final Report| UI
+    
+    subgraph "External Data Simulation"
+        Lit -.-> PubMed((PubMed))
+        Pat -.-> USPTO((USPTO))
+        Clin -.-> FDA((OpenFDA))
+    end
+```
+
+
 ### 1. 📚 Literature Mining Agent from `agents/literature_agent.py`
 *   **Role:** The Researcher
 *   **Job:** Sims scanning millions of medical papers (PubMed, Nature, etc.).
